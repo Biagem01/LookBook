@@ -1,18 +1,33 @@
+
 {
-  "name": "nodejs",
+  "name": "lookbook",
   "version": "1.0.0",
-  "description": "",
+  "description": "Backend API for selling and swapping used clothes",
   "type": "module",
-  "module": "index.js",
+  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "mocha tests/**/*.test.js"
   },
-  "keywords": [],
+  "keywords": ["clothing", "swap", "marketplace"],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@types/node": "^20.9.1",
     "express": "^4.18.2",
-    "node-fetch": "^3.3.2"
+    "node-fetch": "^3.3.2",
+    "mysql2": "^3.6.5",
+    "dotenv": "^16.3.1",
+    "multer": "^1.4.5-lts.1",
+    "cors": "^2.8.5",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2",
+    "mocha": "^10.2.0",
+    "chai": "^5.0.0",
+    "sinon": "^17.0.1"
   }
 }
