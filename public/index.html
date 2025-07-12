@@ -1,0 +1,149 @@
+
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LookBook - Scambia i tuoi vestiti</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <h1 class="nav-logo">LookBook</h1>
+            <div class="nav-buttons" id="navButtons">
+                <button id="loginBtn" class="btn btn-outline">Accedi</button>
+                <button id="registerBtn" class="btn btn-primary">Registrati</button>
+                <div id="userMenu" class="user-menu hidden">
+                    <span id="userName"></span>
+                    <button id="logoutBtn" class="btn btn-outline">Esci</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Hero Section -->
+        <section id="heroSection" class="hero">
+            <div class="hero-content">
+                <h2>Benvenuto su LookBook</h2>
+                <p>La piattaforma per vendere e scambiare vestiti usati</p>
+                <button id="exploreBtn" class="btn btn-large">Esplora i Prodotti</button>
+            </div>
+        </section>
+
+        <!-- Products Section -->
+        <section id="productsSection" class="products-section">
+            <div class="section-header">
+                <h2>Prodotti Disponibili</h2>
+                <div class="filters">
+                    <select id="disponibileFilter">
+                        <option value="">Tutti</option>
+                        <option value="true">Disponibili</option>
+                        <option value="false">Non Disponibili</option>
+                    </select>
+                    <input type="date" id="dateFromFilter" placeholder="Da data">
+                    <input type="date" id="dateToFilter" placeholder="A data">
+                    <button id="applyFilters" class="btn btn-secondary">Applica Filtri</button>
+                </div>
+                <button id="addProductBtn" class="btn btn-primary hidden">Aggiungi Prodotto</button>
+            </div>
+            <div id="productsGrid" class="products-grid">
+                <!-- Products will be loaded here -->
+            </div>
+        </section>
+
+        <!-- Swaps Section -->
+        <section id="swapsSection" class="swaps-section hidden">
+            <div class="section-header">
+                <h2>I Miei Scambi</h2>
+            </div>
+            <div id="swapsGrid" class="swaps-grid">
+                <!-- Swaps will be loaded here -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Modals -->
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Accedi</h2>
+            <form id="loginForm">
+                <input type="email" id="loginEmail" placeholder="Email" required>
+                <input type="password" id="loginPassword" placeholder="Password" required>
+                <button type="submit" class="btn btn-primary">Accedi</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div id="registerModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Registrati</h2>
+            <form id="registerForm">
+                <input type="text" id="registerNome" placeholder="Nome" required>
+                <input type="text" id="registerCognome" placeholder="Cognome" required>
+                <input type="email" id="registerEmail" placeholder="Email" required>
+                <input type="password" id="registerPassword" placeholder="Password" required>
+                <button type="submit" class="btn btn-primary">Registrati</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Product Modal -->
+    <div id="addProductModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Aggiungi Prodotto</h2>
+            <form id="addProductForm" enctype="multipart/form-data">
+                <input type="text" id="productNome" placeholder="Nome prodotto" required>
+                <textarea id="productDescrizione" placeholder="Descrizione"></textarea>
+                <input type="text" id="productTaglia" placeholder="Taglia">
+                <input type="text" id="productMarca" placeholder="Marca">
+                <select id="productCondizione">
+                    <option value="nuovo">Nuovo</option>
+                    <option value="ottimo">Ottimo</option>
+                    <option value="buono" selected>Buono</option>
+                    <option value="discreto">Discreto</option>
+                </select>
+                <input type="number" id="productPrezzo" placeholder="Prezzo (€)" step="0.01">
+                <input type="file" id="productImages" multiple accept="image/*">
+                <button type="submit" class="btn btn-primary">Aggiungi Prodotto</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Product Detail Modal -->
+    <div id="productDetailModal" class="modal">
+        <div class="modal-content large">
+            <span class="close">&times;</span>
+            <div id="productDetailContent">
+                <!-- Product details will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Swap Modal -->
+    <div id="createSwapModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Proponi Scambio</h2>
+            <form id="createSwapForm">
+                <div id="swapProductInfo"></div>
+                <select id="myProductSelect" required>
+                    <option value="">Seleziona il tuo prodotto da offrire</option>
+                </select>
+                <textarea id="swapMessage" placeholder="Messaggio (opzionale)"></textarea>
+                <button type="submit" class="btn btn-primary">Proponi Scambio</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

@@ -29,13 +29,21 @@ app.use(express.urlencoded({ extended: true }));
 // Static files for uploaded images
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
+// Serve frontend static files
+app.use(express.static(path.join(__dirname, 'public')));
+
 // Routes
 app.use('/api/users', userRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/swaps', swapRoutes);
 
-// Health check
+// Serve frontend for root path
 app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+// Health check API
+app.get('/api/health', (req, res) => {
   res.json({ message: 'LookBook API is running!' });
 });
 
