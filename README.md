@@ -89,6 +89,16 @@ PUT /products/:id
 DELETE /products/:id
 
 
+🔁 Scambi
+POST /swaps (proporre uno scambio)
+
+GET /swaps/my
+
+PUT /swaps/:id
+
+
+
+
 
 
 
