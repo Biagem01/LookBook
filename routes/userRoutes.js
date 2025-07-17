@@ -10,6 +10,8 @@ router.post('/register', UserController.createUser);
 router.post('/login', UserController.loginUser);
 
 // Protected routes
+router.get('/me', authenticate, UserController.getCurrentUser);
+
 router.get('/', authenticate, UserController.getAllUsers);
 router.get('/:id', authenticate, UserController.getUserById);
 router.put('/:id', authenticate, UserController.updateUser);

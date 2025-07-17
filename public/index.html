@@ -6,8 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LookBook - Scambia i tuoi vestiti</title>
     <link rel="stylesheet" href="styles.css">
-</head>
-<body>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:ital,wght@0,200..800;1,200..800&family=Bebas+Neue&family=Dosis:wght@200..800&family=Libertinus+Mono&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Playfair+Display+SC:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&family=Sour+Gummy:ital,wght@0,100..900;1,100..900&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&family=Special+Gothic+Expanded+One&family=Syne+Mono&family=Yuji+Syuku&display=swap" rel="stylesheet">
     <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
@@ -16,9 +18,20 @@
                 <button id="loginBtn" class="btn btn-outline">Accedi</button>
                 <button id="registerBtn" class="btn btn-primary">Registrati</button>
                 <div id="userMenu" class="user-menu hidden">
+                <div class="user-dropdown-toggle" id="userNameContainer">
+                    <div id="userNameContainer" class="user-name-clickable">
                     <span id="userName"></span>
-                    <button id="logoutBtn" class="btn btn-outline">Esci</button>
+                    <span id="userArrow" style="margin-left: 5px;">▼</span>
+                    </div>
+
+                    <div id="userDropdownMenu" class="dropdown hidden">
+                        <button id="myListingsBtn">📦 I miei Prodotti</button>
+                        <button id="mySwapsBtn">🔁 Proposte Scambi</button>
+                        <button id="myPurchasesBtn">🛒 Prodotti acquistati</button>
+                    </div>
                 </div>
+                <button id="logoutBtn" class="btn btn-outline">Esci</button>
+            </div>
             </div>
         </div>
     </nav>
@@ -55,14 +68,42 @@
             </div>
         </section>
 
-        <!-- Swaps Section -->
+        <!-- My Products Section -->
+        <section id="myProductsSection" class="products-section hidden">
+            <div class="section-header">
+                <h2>I miei prodotti in vendita</h2>
+                <button id="backToMainFromMyProducts" class="btn btn-secondary">Torna ai prodotti generali</button>
+            </div>
+            <div id="myProductsGrid" class="products-grid">
+                <!-- My products will be loaded here -->
+            </div>
+        </section>
+
+            <!-- Swaps Section -->
+            
         <section id="swapsSection" class="swaps-section hidden">
+             
             <div class="section-header">
                 <h2>I Miei Scambi</h2>
+                <button id="backToMainFromSwaps" class="btn btn-secondary">Torna ai prodotti generali</button>
             </div>
-            <div id="swapsGrid" class="swaps-grid">
-                <!-- Swaps will be loaded here -->
+
+            <h3>Scambi Ricevuti</h3>
+            <div id="receivedSwapsContainer" class="swaps-grid">
+                <!-- Scambi ricevuti caricati qui -->
             </div>
+
+            <h3>Scambi Inviati</h3>
+            <div id="sentSwapsContainer" class="swaps-grid">
+                <!-- Scambi inviati caricati qui -->
+            </div>
+
+                
+            <h3>Scambi Accettati</h3>
+           <div id="acceptedSwapsContainer" class="swaps-grid">
+
+           </div>
+    
         </section>
     </main>
 
@@ -96,27 +137,42 @@
     </div>
 
     <!-- Add Product Modal -->
-    <div id="addProductModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>Aggiungi Prodotto</h2>
-            <form id="addProductForm" enctype="multipart/form-data">
-                <input type="text" id="productNome" placeholder="Nome prodotto" required>
-                <textarea id="productDescrizione" placeholder="Descrizione"></textarea>
-                <input type="text" id="productTaglia" placeholder="Taglia">
-                <input type="text" id="productMarca" placeholder="Marca">
-                <select id="productCondizione">
-                    <option value="nuovo">Nuovo</option>
-                    <option value="ottimo">Ottimo</option>
-                    <option value="buono" selected>Buono</option>
-                    <option value="discreto">Discreto</option>
-                </select>
-                <input type="number" id="productPrezzo" placeholder="Prezzo (€)" step="0.01">
-                <input type="file" id="productImages" multiple accept="image/*">
-                <button type="submit" class="btn btn-primary">Aggiungi Prodotto</button>
-            </form>
-        </div>
+<div id="addProductModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2 id="productFormTitle">Aggiungi Prodotto</h2>
+        <form id="addProductForm" enctype="multipart/form-data">
+            <!-- Campo nascosto per ID prodotto (solo in modifica) -->
+            <input type="hidden" id="editingProductId">
+
+            <input type="text" id="productNome" placeholder="Nome prodotto" required>
+            <textarea id="productDescrizione" placeholder="Descrizione"></textarea>
+            <input type="text" id="productTaglia" placeholder="Taglia">
+            <input type="text" id="productMarca" placeholder="Marca">
+
+            <select id="productCondizione">
+                <option value="nuovo">Nuovo</option>
+                <option value="ottimo">Ottimo</option>
+                <option value="buono" selected>Buono</option>
+                <option value="discreto">Discreto</option>
+            </select>
+
+            <input type="number" id="productPrezzo" placeholder="Prezzo (€)" step="0.01">
+            <input type="file" id="productImages" multiple accept="image/*">
+
+            <!-- CAMPO DISPONIBILITÀ (mostrato solo in modalità modifica) -->
+            <label for="productDisponibile" id="disponibileLabel" class="hidden">Disponibilità</label>
+            <select id="productDisponibile" class="hidden">
+                <option value="true">Disponibile</option>
+                <option value="false">Non disponibile</option>
+            </select>
+
+            <button type="submit" class="btn btn-primary">Aggiungi Prodotto</button>
+        </form>
     </div>
+</div>
+
+
 
     <!-- Product Detail Modal -->
     <div id="productDetailModal" class="modal">

@@ -3,19 +3,24 @@ import { getDB } from '../config/database.js';
 
 class Product {
   constructor(data) {
-    this.id = data.id;
-    this.nome = data.nome;
-    this.descrizione = data.descrizione;
-    this.taglia = data.taglia;
-    this.marca = data.marca;
-    this.condizione = data.condizione;
-    this.prezzo = data.prezzo;
-    this.immagini = typeof data.immagini === 'string' ? JSON.parse(data.immagini) : data.immagini;
-    this.user_id = data.user_id;
-    this.disponibile = data.disponibile;
-    this.created_at = data.created_at;
-    this.updated_at = data.updated_at;
-  }
+  this.id = data.id;
+  this.nome = data.nome;
+  this.descrizione = data.descrizione;
+  this.taglia = data.taglia;
+  this.marca = data.marca;
+  this.condizione = data.condizione;
+  this.prezzo = data.prezzo;
+  this.immagini = typeof data.immagini === 'string' ? JSON.parse(data.immagini) : data.immagini;
+  this.user_id = data.user_id;
+  this.disponibile = data.disponibile;
+  this.created_at = data.created_at;
+  this.updated_at = data.updated_at;
+
+  // 🔥 AGGIUNGI QUESTI DUE!
+  this.user_nome = data.user_nome;
+  this.user_cognome = data.user_cognome;
+}
+
 
   static async findAll(filters = {}) {
     const db = getDB();
@@ -91,6 +96,18 @@ class Product {
 
     return await Product.findById(id);
   }
+
+  static async updateDisponibilita(id, disponibile) {
+  const db = getDB();
+  try {
+    await db.execute('UPDATE products SET disponibile = ? WHERE id = ?', [disponibile, id]);
+    return true;
+  } catch (error) {
+    console.error('Errore in updateDisponibilita:', error);
+    throw error;
+  }
+}
+
 
   static async delete(id) {
     const db = getDB();

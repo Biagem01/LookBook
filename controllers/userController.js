@@ -129,6 +129,21 @@ class UserController {
       res.status(500).json({ error: 'Errore nel login' });
     }
   }
+
+static async getCurrentUser(req, res) {
+  try {
+    const user = req.user;
+
+    // Rimuovi la password hash prima di restituirlo
+    const { password_hash, ...userWithoutPassword } = user;
+
+    res.json(userWithoutPassword);
+  } catch (error) {
+    console.error('Errore nel recuperare l\'utente loggato:', error);
+    res.status(500).json({ error: 'Errore interno del server' });
+  }
+}
+
 }
 
 export default UserController;

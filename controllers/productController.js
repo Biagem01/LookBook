@@ -22,6 +22,18 @@ class ProductController {
     }
   }
 
+  static async getMyProducts(req, res) {
+  try {
+    const userId = req.user.id;
+    const products = await Product.findAll({ user_id: userId });
+    res.json(products);
+  } catch (error) {
+    console.error('Errore nel recupero dei prodotti utente:', error);
+    res.status(500).json({ error: 'Errore nel recupero dei tuoi prodotti' });
+  }
+}
+
+
   static async getProductById(req, res) {
     try {
       const { id } = req.params;
@@ -108,37 +120,43 @@ class ProductController {
   }
 
   static async deleteProduct(req, res) {
-    try {
-      const { id } = req.params;
+  try {
+    const { id } = req.params;
 
-      const product = await Product.findById(id);
-      if (!product) {
-        return res.status(404).json({ error: 'Prodotto non trovato' });
-      }
+    const product = await Product.findById(id);
+    if (!product) {
+      return res.status(404).json({ error: 'Prodotto non trovato' });
+    }
 
-      // Delete associated images
-      if (product.immagini && product.immagini.length > 0) {
-        for (const imagePath of product.immagini) {
-          try {
-            const fullPath = path.join(process.cwd(), imagePath);
-            await fs.unlink(fullPath);
-          } catch (err) {
-            console.warn('Could not delete image:', imagePath);
-          }
+    // 🔐 Controlla che l'utente loggato sia il proprietario
+    if (product.user_id !== req.user.id) {
+      return res.status(403).json({ error: 'Non sei autorizzato a eliminare questo prodotto' });
+    }
+
+    // Cancella le immagini
+    if (product.immagini && product.immagini.length > 0) {
+      for (const imagePath of product.immagini) {
+        try {
+          const fullPath = path.join(process.cwd(), imagePath);
+          await fs.unlink(fullPath);
+        } catch (err) {
+          console.warn('Impossibile eliminare immagine:', imagePath);
         }
       }
+    }
 
-      const deleted = await Product.delete(id);
-      if (deleted) {
-        res.json({ message: 'Prodotto eliminato con successo' });
-      } else {
-        res.status(500).json({ error: 'Errore nell\'eliminazione del prodotto' });
-      }
-    } catch (error) {
-      console.error('Error deleting product:', error);
+    const deleted = await Product.delete(id);
+    if (deleted) {
+      res.json({ message: 'Prodotto eliminato con successo' });
+    } else {
       res.status(500).json({ error: 'Errore nell\'eliminazione del prodotto' });
     }
+  } catch (error) {
+    console.error('Errore in deleteProduct:', error);
+    res.status(500).json({ error: 'Errore nell\'eliminazione del prodotto' });
   }
+}
+
 }
 
 export default ProductController;

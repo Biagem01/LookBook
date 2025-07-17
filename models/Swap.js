@@ -1,4 +1,3 @@
-
 import { getDB } from '../config/database.js';
 
 class Swap {
@@ -12,6 +11,34 @@ class Swap {
     this.messaggio = data.messaggio;
     this.created_at = data.created_at;
     this.updated_at = data.updated_at;
+
+    // Campi aggiuntivi per il frontend
+    this.richiedente_nome = data.richiedente_nome;
+    this.richiedente_cognome = data.richiedente_cognome;
+    this.proprietario_nome = data.proprietario_nome;
+    this.proprietario_cognome = data.proprietario_cognome;
+    this.product_richiesto_nome = data.product_richiesto_nome;
+    this.product_offerto_nome = data.product_offerto_nome;
+  }
+
+  toJSON() {
+    return {
+      id: this.id,
+      user_richiedente_id: this.user_richiedente_id,
+      user_proprietario_id: this.user_proprietario_id,
+      product_richiesto_id: this.product_richiesto_id,
+      product_offerto_id: this.product_offerto_id,
+      stato: this.stato,
+      messaggio: this.messaggio,
+      created_at: this.created_at,
+      updated_at: this.updated_at,
+      richiedente_nome: this.richiedente_nome,
+      richiedente_cognome: this.richiedente_cognome,
+      proprietario_nome: this.proprietario_nome,
+      proprietario_cognome: this.proprietario_cognome,
+      product_richiesto_nome: this.product_richiesto_nome,
+      product_offerto_nome: this.product_offerto_nome
+    };
   }
 
   static async findAll(filters = {}) {
@@ -89,11 +116,18 @@ class Swap {
     return await Swap.findById(result.insertId);
   }
 
-  static async updateStatus(id, stato) {
-    const db = getDB();
+static async updateStatus(id, stato) {
+  const db = getDB();
+  
+  try {
     await db.execute('UPDATE swaps SET stato = ? WHERE id = ?', [stato, id]);
     return await Swap.findById(id);
+  } catch (error) {
+    console.error('Errore in updateStatus:', error);
+    throw error;
   }
+}
+
 
   static async delete(id) {
     const db = getDB();

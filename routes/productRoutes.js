@@ -1,4 +1,3 @@
-
 import express from 'express';
 import ProductController from '../controllers/productController.js';
 import { authenticate } from '../middlewares/auth.js';
@@ -8,6 +7,10 @@ const router = express.Router();
 
 // Public routes
 router.get('/', ProductController.getAllProducts);
+
+// Sposta questa rotta qui, prima di :id
+router.get('/my', authenticate, ProductController.getMyProducts);
+
 router.get('/:id', ProductController.getProductById);
 
 // Protected routes

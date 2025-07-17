@@ -14,7 +14,7 @@ class SwapController {
       if (dateTo) filters.dateTo = dateTo;
 
       const swaps = await Swap.findAll(filters);
-      res.json(swaps);
+      res.json(swaps.map(swap => swap.toJSON()));
     } catch (error) {
       console.error('Error fetching swaps:', error);
       res.status(500).json({ error: 'Errore nel recuperare gli scambi' });
@@ -73,37 +73,51 @@ class SwapController {
     }
   }
 
-  static async updateSwapStatus(req, res) {
-    try {
-      const { id } = req.params;
-      const { stato } = req.body;
+ static async updateSwapStatus(req, res) {
+  try {
+    const { id } = req.params;
+    const { stato } = req.body;
 
-      if (!stato || !['pending', 'accepted', 'rejected', 'completed'].includes(stato)) {
-        return res.status(400).json({ error: 'Stato non valido' });
-      }
-
-      const swap = await Swap.findById(id);
-      if (!swap) {
-        return res.status(404).json({ error: 'Scambio non trovato' });
-      }
-
-      // If swap is accepted or completed, mark products as unavailable
-      if (stato === 'accepted' || stato === 'completed') {
-        await Product.update(swap.product_richiesto_id, { disponibile: false });
-        await Product.update(swap.product_offerto_id, { disponibile: false });
-      } else if (stato === 'rejected' && swap.stato === 'accepted') {
-        // If rejecting a previously accepted swap, make products available again
-        await Product.update(swap.product_richiesto_id, { disponibile: true });
-        await Product.update(swap.product_offerto_id, { disponibile: true });
-      }
-
-      const updatedSwap = await Swap.updateStatus(id, stato);
-      res.json(updatedSwap);
-    } catch (error) {
-      console.error('Error updating swap status:', error);
-      res.status(500).json({ error: 'Errore nell\'aggiornamento dello stato dello scambio' });
+    if (!stato || !['pending', 'accepted', 'rejected', 'completed'].includes(stato)) {
+      return res.status(400).json({ error: 'Stato non valido' });
     }
+
+    const swap = await Swap.findById(id);
+    if (!swap) {
+      return res.status(404).json({ error: 'Scambio non trovato' });
+    }
+
+    // ⚠️ Blocca completamento se già accettato
+    if (swap.stato === 'accepted' && stato === 'completed') {
+      return res.status(400).json({ error: 'Uno scambio accettato non può essere completato' });
+    }
+
+
+    console.log('Stato corrente swap:', swap.stato);
+    console.log('Nuovo stato richiesto:', stato);
+
+    // Aggiorna lo stato
+    const updatedSwap = await Swap.updateStatus(id, stato);
+
+    // Se aggiornamento ok, aggiorna prodotti dopo (qui o in updateStatus)
+    if (stato === 'accepted' || stato === 'completed') {
+      await Product.updateDisponibilita(swap.product_richiesto_id, false);
+      await Product.updateDisponibilita(swap.product_offerto_id, false);  
+
+    } else if (stato === 'rejected' && swap.stato === 'accepted') {
+     await Product.updateDisponibilita(swap.product_richiesto_id, true);
+      await Product.updateDisponibilita(swap.product_offerto_id, true);
+
+    }
+
+    return res.json(updatedSwap);
+
+  } catch (error) {
+    console.error('Error updating swap status:', error);
+    return res.status(500).json({ error: 'Errore nell\'aggiornamento dello stato dello scambio' });
   }
+}
+
 
   static async deleteSwap(req, res) {
     try {
