@@ -56,7 +56,8 @@ Visualizzazione scambi filtrati per stato.
 2. Installa le dipendenze ==> npm install
 3. Crea il file .env
 4. Crea il database ==> importa lo schema SQL
-5. Avvia il server ==> npm run dev
+5. Avvia il database con MAMP
+6. Avvia il server ==> npm run dev
 
 
 Il server sarà disponibile su http://localhost:PORT.
